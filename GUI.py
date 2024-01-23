@@ -9,7 +9,7 @@ class GUI(Module):
 
         # variables
         self.movement = [0 for i in range(6)]
-        self.mode = (1920,1080)
+        self.mode = (1920,1200)
         self.gripper = 1
 
         # request from PyGameServices

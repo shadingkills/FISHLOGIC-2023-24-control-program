@@ -14,6 +14,7 @@ from EthernetServer import TestEthernetHandler
 #from USBCameraServer import USBCameraHandler, USBCameraDisplay
 from EM import EM
 from Gripper import Gripper
+from Servo import Servo
 import os
 import time 
 
@@ -40,6 +41,7 @@ Logger = Logger(False, False, None, "ethernet.send") # FILE, PRINT, RATE_LIMITER
 EM1 = EM("EM1", "0x30") # change address here
 EM2 = EM("EM2", "0x33") # change address here
 Gripper = Gripper("gripper", "0x21", "15000", True)
+Servo = Servo("gripper", "0x21", "1100", "800", "1100", "24")
 
 
 # REGISTERING MODULES (INSTANCE, REFRESH PER SECOND)
@@ -55,7 +57,8 @@ mm.register(
             (EthernetHandler, 120),
             (EM1, 5),
             (EM2, 5),
-            (Gripper, 10),
+            (Servo, 10)
+            # (Gripper, 10),
             # (TestEthernetHandler, 15),
 )
 

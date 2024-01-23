@@ -1,4 +1,4 @@
-from ModuleBase import Module, Async_Task, AsyncModuleManager
+from ModuleBase import Module #, Async_Task, AsyncModuleManager
 from pubsub import pub
 import asyncio
 import Gripper 
@@ -16,7 +16,7 @@ class Servo(Module):
         self.address = address
         exec(f'pub.subscribe(self.Listener, "gamepad.{self.device}")')
 
-    @Async_Task.loop(1)
+    # @Async_Task.loop(1)
     async def run(self):
         if self.inc == 0:
             return
@@ -46,21 +46,21 @@ class __Test_Case_Send__(Module):
     def Listener(self, message):
         print(message)
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    Gripper = Gripper('gripper', '0x21', 17000)
-    Gripper.start(1)
-    __Test_Case_Send__ = __Test_Case_Send__()
-    __Test_Case_Send__.start(1)
-    AsyncModuleManager = AsyncModuleManager()
-    AsyncModuleManager.register_modules(Gripper, __Test_Case_Send__)
+#     Gripper = Gripper('gripper', '0x21', 17000)
+#     Gripper.start(1)
+#     __Test_Case_Send__ = __Test_Case_Send__()
+#     __Test_Case_Send__.start(1)
+#     AsyncModuleManager = AsyncModuleManager()
+#     AsyncModuleManager.register_modules(Gripper, __Test_Case_Send__)
 
-    try:
-        AsyncModuleManager.run_forever()
-    except KeyboardInterrupt:
-        pass
-    except BaseException:
-        pass
-    finally:
-        print("Closing Loop")
-        AsyncModuleManager.stop_all()
+#     try:
+#         AsyncModuleManager.run_forever()
+#     except KeyboardInterrupt:
+#         pass
+#     except BaseException:
+#         pass
+#     finally:
+#         print("Closing Loop")
+#         AsyncModuleManager.stop_all()
