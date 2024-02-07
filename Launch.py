@@ -16,7 +16,6 @@ from EthernetServer import TestEthernetHandler
 from EM import EM
 from Gripper import Gripper
 from Servo import Servo
-#from SGripper import Servo
 import os
 import time 
 
