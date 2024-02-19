@@ -16,9 +16,9 @@ from EthernetServer import TestEthernetHandler
 from EM import EM
 from Gripper import Gripper
 from Servo import Servo
-#from SGripper import Servo
 import os
 import time 
+from Actuator import Actuator
 
 # allow pygame to not be in focus and still works
 os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"
@@ -41,9 +41,10 @@ EthernetHandler = EthernetHandler()
 TestEthernetHandler = TestEthernetHandler()
 Logger = Logger(False, False, None, "ethernet.send") # FILE, PRINT, RATE_LIMITER, TOPICS
 EM1 = EM("EM1", "0x32") # change address here
-EM2 = EM("EM2", "0x33") # change address here
-#Gripper = Gripper("gripper", "0x21", "15000", True)
-Gripper = Servo("gripper","0x43", "1100", "800", "1800", "24")
+EM2 = EM("EM2", "0x33") # change address here........................................
+Gripper = Gripper("gripper", "0x21", "10000", True)
+Actuator = Actuator("actuator", "0x20", "10000")
+#Gripper = Servo("gripper","0x43", "1100", "800", "1800", "24")
 
 
 # REGISTERING MODULES (INSTANCE, REFRESH PER SECOND)
@@ -59,7 +60,7 @@ mm.register(
             (EthernetHandler, 120),
             (EM1, 5),
             (EM2, 5),
-            #(Servo, 10)
+            (Actuator, 5),
             (Gripper, 10),
             # (TestEthernetHandler, 15),
 )
