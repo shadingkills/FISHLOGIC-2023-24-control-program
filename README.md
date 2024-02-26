@@ -1,2 +1,2 @@
-# INSERR
- Control Program for INSERR
+# AMPHITRITE
+ Control Program for AMPHITRITE
