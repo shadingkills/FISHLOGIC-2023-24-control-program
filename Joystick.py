@@ -181,7 +181,7 @@ class Joystick(Module):
         # MAPPING IN WINDOWS
         pub.sendMessage("gamepad.direct", message = {"gamepad_direct": self.direct_input}) # For GUI Tuple (LLR, LUD, RLR, RUD, BL, BR)
         LLR, LUD, RLR, RUD, BL, BR = self.direct_input
-        LLR = 1*deadzoneleft(LLR)
+        LLR = -1*deadzoneleft(LLR)
         LUD = -1*deadzoneleft(LUD)
         RLR = 1*deadzoneright(RLR)
         RUD = -1*deadzoneright(RUD)
@@ -214,9 +214,9 @@ class Joystick(Module):
             self.control_invert = not self.control_invert
             pub.sendMessage("gamepad.invert", message = {"gamepad_invert": self.control_invert}) # For GUI
 
-        if button_pressed(self.a_input):
-            self.a_counter += 1
-            pub.sendMessage("gamepad.transect", message = {"gamepad_transect": int(self.a_counter % 2)})
+        #if button_pressed(self.a_input):
+           # self.a_counter += 1
+           # pub.sendMessage("gamepad.transect", message = {"gamepad_transect": int(self.a_counter % 2)})
 
         if button_pressed(self.north_input):
             self.change_active_tool(0)

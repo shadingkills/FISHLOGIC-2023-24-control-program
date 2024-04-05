@@ -3,7 +3,7 @@ from PyGameServices import PyGameServices
 from pubsub import pub
 import numpy as np
 
-class GUI(Module):
+class GUI3(Module):
     def __init__(self):
         super().__init__()
 
@@ -73,31 +73,11 @@ class GUI(Module):
         # pubsub init
         pub.subscribe(self.direct_handler, "gamepad.direct")
         pub.subscribe(self.gripper_handler,"gamepad.gripper")
-        pub.subscribe(self.em_handler,"gamepad.em_states")
-        pub.subscribe(self.profile_handler,"gamepad.profile")
-        pub.subscribe(self.invert_handler,"gamepad.invert")
         pub.subscribe(self.thruster_handler, "thruster.power")
 
     def rect(self,colour, dimensions):
         self.pygame.draw.rect(self.screen, colour, self.pygame.Rect(dimensions))
         # (X coord, Y position from top, length, thickness)
-
-    def em_back(self):
-        # large rectangles
-        self.rect(self.em_2_colour, (100, 350, 200, 100))
-        self.rect(self.em_1_colour, (400, 350, 200, 100))
-
-        # top decorations
-        self.rect(self.em_2_colour, (120, 340, 50, 10))
-        self.rect(self.em_2_colour , (230, 340, 50, 10))
-
-        self.rect(self.em_1_colour, (420, 340, 50, 10))
-        self.rect(self.em_1_colour, (530, 340, 50, 10))
-
-        self.triangle(self.em_1r_colour, [(230, 370), (230, 430), (270, 400)])
-        self.triangle(self.em_2r_colour, [(530, 370), (530, 430), (570, 400)])
-        self.triangle(self.em_1l_colour, [(170, 370), (170, 430), (130, 400)])
-        self.triangle(self.em_2l_colour, [(470, 370), (470, 430), (430, 400)])
 
     def triangle(self, colour, points):
         self.pygame.draw.polygon(surface=self.screen, color=colour, points=points)
@@ -118,14 +98,6 @@ class GUI(Module):
         for i in range(4):
             self.dcircle((i * 50, i * 50, i * 50), (500, 200), 120 - i * 30)
             self.dcircle((i * 50, i * 50, i * 50), (200, 200), 120 - i * 30)
-
-    def gripper_display(self):
-        if self.gripper == -1:
-             self.screen.blit(self.gripper_full_opened,(-100,450))
-        elif self.gripper == 0:
-            self.screen.blit(self.gripper_half, (-100, 450))
-        elif self.gripper == 1:
-             self.screen.blit(self.gripper_closed, (-100, 450))
 
     def fl_thrust(self,color,TBF):
         def_pos_1 = (1340, 185)
@@ -167,23 +139,6 @@ class GUI(Module):
         test_pos_2 = (1390 - 100 * TBF, 460 - 100 * TBF)
         self.pygame.draw.polygon(self.screen, color, [(def_pos_1), (def_pos_2), (test_pos_2), (test_pos_1)])
 
-    def em_activation(self):
-        if self.em1r == True:
-            self.em_1r_colour = self.turquoise
-        if self.em2r == True:
-            self.em_2r_colour = self.turquoise
-        if self.em1l == True:
-            self.em_1l_colour = self.turquoise
-        if self.em2l == True:
-            self.em_2l_colour = self.turquoise
-        if self.em2r == False:
-            self.em_2r_colour = self.black
-        if self.em2l == False:
-            self.em_2l_colour = self.black
-        if self.em1l == False:
-            self.em_1l_colour = self.black
-        if self.em1r == False:
-            self.em_1r_colour = self.black
 
     def updown_markers(self):
         self.rect(self.white, (700, 365, 50, 85))
@@ -196,39 +151,11 @@ class GUI(Module):
         self.rect(self.white, (800, 195, 50, 85))
         self.rect(self.black, (800, 110, 50, 85))
 
-    def rov_image(self):
-         self.screen.blit(self.rov_upview, (1300, 150))
 
-    def profile_label(self):
-        if self.profile == "A":
-            coloring = self.blue
-        elif self.profile == "B":
-            coloring = self.yellow
-        elif self.profile == "C":
-            coloring = self.dark_red
-        elif self.profile =="D":
-            coloring = self.white
-        self.rect(coloring, (1250, 740, 170, 170))
-        self.profile_labeler = self.comic_font_small.render("Current Profile:",False, (0,0,0))
-        self.profile_info = self.comic_font_large.render(str(self.profile), False, (0,0,0))
-        self.screen.blit(self.profile_info,(1280,700))
-        self.screen.blit(self.profile_labeler,(1230,660))
-
-    def inversion(self):
-        self.inversion_labeler = self.comic_font_small.render("Inversion:",False, (0,0,0))
-        self.inverting = self.comic_font_medium.render(str(self.invert), False, (0,0,0))
-        self.screen.blit(self.inverting,(1630,700))
-        self.screen.blit(self.inversion_labeler, (1630,650))
-        if self.invert == True:
-            coloring = self.blue
-        else:
-            coloring = self.dark_red
-        self.rect(coloring, (1630, 800, 200, 100))
 
     def thruster_data(self):
         if len(self.thruster) == 6:
             self.TFL, self.TFR, self.TBL, self.TBR, self.TUF, self.TUB = (self.thruster)
-        if len(self.thruster) == 1:
             self.TFL, self.TFR, self.TBL, self.TBR, self.TUF, self.TUB = (self.thruster[0])
 
 
@@ -239,22 +166,10 @@ class GUI(Module):
     def gripper_handler(self, message):
         self.gripper = message["tool_state"]
 
-    def em_handler(self, message):
-        self.em1l = message["gamepad.EM1L"]
-        self.em1r = message["gamepad.EM1R"]
-        self.em2l = message["gamepad.EM2L"]
-        self.em2r = message["gamepad.EM2R"]
-
-    def profile_handler(self, message):
-        self.profile = message["gamepad_profile"]
-
-    def invert_handler(self, message):
-        self.invert = message["gamepad_invert"]
 
     def thruster_handler(self, message):
         self.thruster = message["thruster_power"]
-
-    #x button to invert
+    
 
     # MAIN LOOP
     def run(self):
@@ -263,23 +178,16 @@ class GUI(Module):
         LLR, LUD, RLR, RUD,BL,BR = (self.movement)
         self.thruster_data()
         self.dots_back()
-
         self.updown_markers()
-        self.updown(BL,BR)
-        self.gripper_display()
+        self.updown(BL, BR)
         self.plottings(LLR,-LUD,200,200)
         self.plottings(RLR,-RUD,500,200)
-        self.em_back()
-        self.em_activation()
-        self.rov_image()
+        self.rect(self.yellow, (1200, 365,  LLR*150, 85))
+        self.rect(self.yellow, (1200, 600, -LLR*150, 85))
         self.fl_thrust(self.yellow, self.TFL)
         self.br_thrust(self.yellow, self.TBR)
         self.fr_thrust(self.yellow, self.TFR)
         self.bl_thrust(self.yellow, self.TBL)
-        self.up_thrust(self.yellow,self.blue, self.TUF)
-        self.down_thrust(self.yellow, self.blue, self.TUB)
-        self.profile_label()
-        self.inversion()
-        #print(self.TUF)
+       
         
         self.pygame.display.flip()

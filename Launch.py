@@ -19,7 +19,9 @@ from Servo import Servo
 import os
 import time 
 from Actuator import Actuator
-
+from GUI2 import GUI2
+from GUI3 import GUI3
+from Tempsensor import Tempsensor
 # allow pygame to not be in focus and still works
 os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"
 
@@ -29,7 +31,9 @@ pygs = PyGameServices()
 pygs.start(100)
 pygame = pygs.get_pygame()
 
-GUI = GUI()
+#GUI = GUI()
+GUI2 = GUI2()
+#GUI3 = GUI3()
 Joystick = Joystick()
 ControlProfileA = ControlProfile(100, 30, "A")
 ControlProfileB = ControlProfile(70, 50, "B")
@@ -44,12 +48,15 @@ EM1 = EM("EM1", "0x32") # change address here
 EM2 = EM("EM2", "0x33") # change address here........................................
 Gripper = Gripper("gripper", "0x21", "10000", True)
 Actuator = Actuator("actuator", "0x20", "10000")
+Tempsensor = Tempsensor("Tempsensor", "0x61", 0.5)
 #Gripper = Servo("gripper","0x43", "1100", "800", "1800", "24")
 
 
 # REGISTERING MODULES (INSTANCE, REFRESH PER SECOND)
 mm.register(
-            (GUI, 60),
+            #(GUI3, 60),
+            (GUI2, 60),
+            #(GUI, 60),
             (Joystick, 60),
             (ControlProfileA, 1),
             (ControlProfileB, 1),
