@@ -1,4 +1,4 @@
-from ModuleBase import Module #Async_Task
+from ModuleBase import Module #, Async_Task, AsyncModuleManager
 from pubsub import pub
 import asyncio
 import Gripper 
@@ -15,29 +15,29 @@ class Servo(Module):
         self.max = 2500 if int(maximum) > 2500 else int(maximum)
         self.address = address
         exec(f'pub.subscribe(self.Listener, "gamepad.{self.device}")')
-        
+
     def run(self):
         if self.inc == 0:
             return
         self.pos += self.inc
         if self.pos > self.max: self.pos = self.max
         if self.pos < self.min: self.pos = self.min
-        pub.sendMessage('ethernet.send', message = {"type": "CAN","address": eval(self.address), "data": [0x40, self.pos >> 8 & 0xff, self.pos & 0xff]})
-        
-    def Listener(self, message):
-        self.tool_state = message["tool_state"]
+        pub.sendMessage('can.send', message = {"address": eval(self.address), "data": [0x40, self.pos >> 8 & 0xff, self.pos & 0xff]})
 
-        if self.tool_state == 1:
+    def Listener(self, message):
+        tool_state = message["tool_state"]
+
+        if tool_state == 1:
             self.inc = +self.increment
-        elif self.tool_state == -1:
-            self.inc = -self.increment
+        elif tool_state == -1:
+            self.inc = -self.increment 
         else:
             self.inc = 0
 
 class __Test_Case_Send__(Module):
     def __init__(self):
         super().__init__()
-        pub.subscribe(self.Listener, "ethernet.send")
+        pub.subscribe(self.Listener, "can.send")
 
     def run(self):
         pub.sendMessage("gamepad.gripper", message = {"extend": False, "retract": True})
